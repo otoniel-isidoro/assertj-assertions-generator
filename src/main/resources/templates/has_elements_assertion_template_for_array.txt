@@ -7,19 +7,19 @@
    */
   public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    isNotNull();
+    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    if(actual!=null){
+        // check that given ${elementType} varargs is not null.
+        if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
 
-    // check that given ${elementType} varargs is not null.
-    if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
-    
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.get${Property}()).contains(${property});
+        // check with standard error message (see commented below to set your own message).
+        Assertions.assertThat(actual.get${Property}()).contains(${property});
 
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
-    
+        // To override the standard error message :
+        // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+        // - uncomment the line below and set your error message:
+        // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+    }
     // return the current assertion for method chaining
     return ${myself};
   }
@@ -31,16 +31,16 @@
    */
   public ${self_type} hasNo${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    isNotNull();
+    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    if(actual!=null){
+        // we override the default error message with a more explicit one
+        String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
 
-    // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
-    
-    // check
-    if (actual.get${Property}().length > 0)  {
-      failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
+        // check
+        if (actual.get${Property}().length > 0)  {
+          failWithMessage(assertjErrorMessage, actual, java.util.Arrays.toString(actual.get${Property}()));
+        }
     }
-    
     // return the current assertion for method chaining
     return ${myself};
   }

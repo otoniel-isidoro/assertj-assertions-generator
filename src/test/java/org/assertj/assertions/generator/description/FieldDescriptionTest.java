@@ -1,9 +1,11 @@
 package org.assertj.assertions.generator.description;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.assertj.assertions.generator.data.nba.Player;
 import org.junit.Test;
+
+import java.util.Date;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FieldDescriptionTest {
 
@@ -41,4 +43,13 @@ public class FieldDescriptionTest {
     fieldDescription = new FieldDescription("String", new TypeDescription(new TypeName(String.class)));
     assertThat(fieldDescription.isRealNumberType()).as("String").isFalse();
   }
+
+    @Test
+    public void should_detect_dates_correctly() throws Exception {
+        fieldDescription = new FieldDescription("date", new TypeDescription(new TypeName(Date.class)));
+        assertThat(fieldDescription.isDateType()).as("date").isTrue();
+        // not date types
+        fieldDescription = new FieldDescription("int", new TypeDescription(new TypeName(int.class)));
+        assertThat(fieldDescription.isDateType()).as("int").isFalse();
+    }
 }

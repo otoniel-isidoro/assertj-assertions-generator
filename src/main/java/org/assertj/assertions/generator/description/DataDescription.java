@@ -5,45 +5,51 @@ package org.assertj.assertions.generator.description;
  */
 public abstract class DataDescription {
 
-  private final String name;
   protected final TypeDescription typeDescription;
+  private final String name;
 
   public DataDescription(String name, TypeDescription typeDescription) {
-    super();
-    this.name = name;
-    this.typeDescription = typeDescription;
+	super();
+	this.name = name;
+	this.typeDescription = typeDescription;
   }
 
   public String getName() {
-    return name;
+	return name;
   }
 
   public String getTypeName() {
-    return typeDescription.getSimpleNameWithOuterClass();
+	return typeDescription.getSimpleNameWithOuterClass();
   }
 
   public boolean isIterableType() {
-    return typeDescription.isIterable();
+	return typeDescription.isIterable();
   }
 
   public boolean isArrayType() {
-    return typeDescription.isArray();
+	return typeDescription.isArray();
   }
 
   public boolean isPrimitiveType() {
-    return typeDescription.isPrimitive();
+	return typeDescription.isPrimitive();
   }
 
   public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
+	return typeDescription.isRealNumber();
   }
 
   public boolean isBooleanType() {
-    return typeDescription.isBoolean();
+	return typeDescription.isBoolean();
+  }
+
+  public boolean isDateType() {
+	return typeDescription.isDate();
   }
 
   public String getElementTypeName() {
-    return typeDescription.getElementTypeName() == null ? null : typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
+	return typeDescription.getElementTypeName() == null ?
+			null :
+			typeDescription.getElementTypeName().getSimpleNameWithOuterClass();
   }
 
 }

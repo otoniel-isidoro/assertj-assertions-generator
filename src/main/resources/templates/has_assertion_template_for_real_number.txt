@@ -10,17 +10,17 @@
    */
   public ${self_type} has${Property}(${propertyType} ${property}, ${propertyType} offset) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    isNotNull();
+    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    if(actual!=null){
+        ${propertyType} actual${Property} = actual.get${Property}();
 
-    ${propertyType} actual${Property} = actual.get${Property}();
-    
-    // overrides the default error message with a more explicit one
-    String assertjErrorMessage = String.format("\nExpected ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
-                                               actual${Property}, ${property}, offset, Math.abs(${property} - actual${Property}));
-    
-    // check
-    Assertions.assertThat(actual${Property}).overridingErrorMessage(assertjErrorMessage).isCloseTo(${property}, Assertions.within(offset));
+        // overrides the default error message with a more explicit one
+        String assertjErrorMessage = String.format("\nExpected ${property}:\n  <%s>\nto be close to:\n  <%s>\nby less than <%s> but difference was <%s>",
+                                                   actual${Property}, ${property}, offset, Math.abs(${property} - actual${Property}));
 
+        // check
+        Assertions.assertThat(actual${Property}).overridingErrorMessage(assertjErrorMessage).isCloseTo(${property}, Assertions.within(offset));
+    }
     // return the current assertion for method chaining
     return ${myself};
   }

@@ -7,22 +7,144 @@
    */
   public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    isNotNull();
+    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    if(actual!=null){
+        if(actual.get${Property}()!=null){
+            // check that given ${elementType} varargs is not null.
+            if (${property} == null) {
+                 failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual,
+                 "null", actual.get${Property}());
+            } else {
+                // check with standard error message (see commented below to set your own message).
+                Assertions.assertThat(actual.get${Property}()).contains(${property});
 
-    // check that given ${elementType} varargs is not null.
-    if (${property} == null) throw new AssertionError("Expecting ${property} parameter not to be null.");
-    
-    // check with standard error message (see commented below to set your own message).
-    Assertions.assertThat(actual.get${Property}()).contains(${property});
-
-    // To override the standard error message :
-    // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
-    // - uncomment the line below and set your error message:
-    // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
-
+                // To override the standard error message :
+                // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+                // - uncomment the line below and set your error message:
+                // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+            }
+        } else {
+            if (${property} != null) {
+                failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual,
+                ${property}, "null");
+            }
+        }
+    }
     // return the current assertion for method chaining
     return ${myself};
   }
+
+  /**
+     * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements ignoring
+     given fields.
+     * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+     * @param ignoringFields the fields name to ignore
+     * @return this assertion object.
+     * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+     */
+    public ${self_type} has${Property}IgnoringGivenFields(List<${elementType}> ${property}, String... ignoringFields) ${throws}{
+      // check that actual ${class_to_assert} we want to make assertions on is not null.
+      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      if(actual!=null){
+          if(actual.get${Property}()!=null){
+              // check that given ${elementType} varargs is not null.
+              if (${property} == null) {
+                   failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, "null", actual.get${Property}());
+              } else {
+                  // check with standard error message (see commented below to set your own message).
+                  Assertions.assertThat(actual.get${Property}()).usingElementComparatorIgnoringFields(ignoringFields)
+                    .contains(${property}.toArray(new ${elementType}[${property}.size()]));
+
+                  // To override the standard error message :
+                  // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+                  // - uncomment the line below and set your error message:
+                  // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+              }
+          } else {
+                  if (${property} != null) {
+                      failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, ${property}, "null");
+                  }
+          }
+      }
+      // return the current assertion for method chaining
+      return ${myself};
+    }
+
+
+    /**
+     * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements using
+     comparator on given fields.
+     * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+     * @param fields the fields name to compare
+     * @return this assertion object.
+     * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+     */
+    public ${self_type} has${Property}UsingComparatorOnFields(List<${elementType}> ${property}, String... fields)
+    ${throws}{
+      // check that actual ${class_to_assert} we want to make assertions on is not null.
+      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      if(actual!=null){
+           if(actual.get${Property}()!=null){
+                // check that given ${elementType} varargs is not null.
+                if (${property} == null) {
+                     failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, "null", actual.get${Property}());
+                } else {
+                      // check with standard error message (see commented below to set your own message).
+                      Assertions.assertThat(actual.get${Property}()).usingElementComparatorOnFields(fields)
+                        .contains(${property}.toArray(new ${elementType}[${property}.size()]));
+                      // To override the standard error message :
+                      // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+                      // - uncomment the line below and set your error message:
+                      // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+                }
+           } else {
+                if (${property} != null) {
+                    failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, ${property}, "null");
+                }
+           }
+      }
+      // return the current assertion for method chaining
+      return ${myself};
+    }
+
+
+    /**
+     * Verifies that the actual ${class_to_assert}'s ${property} contains the given ${elementType} elements using
+     field by field comparator.
+     * @param ${property} the given elements that should be contained in actual ${class_to_assert}'s ${property}.
+     * @return this assertion object.
+     * @throws AssertionError if the actual ${class_to_assert}'s ${property} does not contain all given ${elementType} elements.${throws_javadoc}
+     */
+    public ${self_type} has${Property}UsingFieldByFieldComparator(${elementType}... ${property})
+    ${throws}{
+      // check that actual ${class_to_assert} we want to make assertions on is not null.
+      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      if(actual!=null){
+           if(actual.get${Property}()!=null){
+              // check that given ${elementType} varargs is not null.
+              if (${property} == null) {
+                   failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, "null", actual.get${Property}());
+              } else {
+                  // check with standard error message (see commented below to set your own message).
+                  Assertions.assertThat(actual.get${Property}()).usingFieldByFieldElementComparator()
+                    .contains(${property});
+
+                  // To override the standard error message :
+                  // - remove the previous call to Assertions.assertThat(actual.get${Property}().contains(${property})
+                  // - uncomment the line below and set your error message:
+                  // Assertions.assertThat(actual.get${Property}()).overridingErrorMessage("\nmy error message %s", "arg1").contains(${property});
+              }
+           } else {
+                if (${property} != null) {
+                    failWithMessage("\nExpected ${property} of:\n  <%s>\nto be:\n  <%s>\nbut was:\n  <%s>", actual, ${property}, "null");
+                }
+           }
+      }
+      // return the current assertion for method chaining
+      return ${myself};
+    }
+
+
 
   /**
    * Verifies that the actual ${class_to_assert} has no ${property}.
@@ -31,16 +153,16 @@
    */
   public ${self_type} hasNo${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    isNotNull();
+    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    if(actual!=null){
+        // we override the default error message with a more explicit one
+        String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
 
-    // we override the default error message with a more explicit one
-    String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";
-    
-    // check
-    if (!actual.get${Property}().isEmpty()) {
-      failWithMessage(assertjErrorMessage, actual, actual.get${Property}());
+        // check
+        if (!actual.get${Property}().isEmpty()) {
+          failWithMessage(assertjErrorMessage, actual, actual.get${Property}());
+        }
     }
-    
     // return the current assertion for method chaining
     return ${myself};
   }

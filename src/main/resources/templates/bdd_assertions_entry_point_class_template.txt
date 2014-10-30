@@ -10,7 +10,7 @@ ${all_assertions_entry_points}
   /**
    * Creates a new <code>{@link BddAssertions}</code>.
    */
-  protected BddAssertions() {
+  protected BddAssertions() extends BDDAssertions {
     // empty
   }
 }

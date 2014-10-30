@@ -17,13 +17,13 @@ import java.util.List;
 
 /**
  * Stores the information needed to generate an assertion for a getter method.
- * <p>
+ * <p/>
  * Let's say we have the following method in class <code>Person</code> :
- * 
+ * <p/>
  * <pre>
  * <code>public int getAge()</code>
  * </pre>
- * <p>
+ * <p/>
  * To generate <code>PersonAssert</code> <code>hasAge(int expectedAge)</code> assertion in <code>PersonAssert</code>, we
  * need to know :
  * <ul>
@@ -31,39 +31,42 @@ import java.util.List;
  * <li>property type</li>
  * </ul>
  * Note that <code>Person</code> doesn't need to have an <code>age</code> field, just the <code>getAge</code> method.
- * <p>
- * 
+ * <p/>
+ *
  * @author Joel Costigliola
- * 
  */
 public class GetterDescription extends DataDescription implements Comparable<GetterDescription> {
 
   private final List<TypeName> exceptions;
 
   public GetterDescription(String propertyName, TypeDescription typeDescription, List<TypeName> exceptions) {
-    super(propertyName, typeDescription);
-    this.exceptions = new ArrayList<TypeName>(exceptions);
+	super(propertyName, typeDescription);
+	this.exceptions = new ArrayList<TypeName>(exceptions);
   }
 
   public String getPropertyName() {
-    return getName();
+	return getName();
   }
 
   public int compareTo(GetterDescription other) {
-    return getName().compareTo(other.getName());
+	return getName().compareTo(other.getName());
   }
 
   @Override
   public String toString() {
-    return "GetterDescription [propertyName=" + getName() + ", typeDescription=" + typeDescription + "]";
+	return "GetterDescription [propertyName=" + getName() + ", typeDescription=" + typeDescription + "]";
   }
 
   public List<TypeName> getExceptions() {
-    return exceptions;
+	return exceptions;
   }
 
   public boolean isRealNumberType() {
-    return typeDescription.isRealNumber();
+	return typeDescription.isRealNumber();
+  }
+
+  public boolean isDateType() {
+	return typeDescription.isDate();
   }
 
 }

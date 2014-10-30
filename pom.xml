@@ -48,7 +48,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>1.6.1</version>
+      <version>1.7.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -110,7 +110,7 @@
         </configuration>
       </plugin>
       <!-- generate jacoco report -->
-      <plugin>
+      <!--<plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
@@ -118,7 +118,7 @@
             <exclude>**/AssertionGeneratorLauncher.*</exclude>
           </excludes>
         </configuration>
-      </plugin>
+      </plugin>-->
       <!-- to get jacoco report we need to set argLine in surefire, without this snippet the jacoco argLine is lost -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>

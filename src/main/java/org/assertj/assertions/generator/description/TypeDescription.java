@@ -15,31 +15,30 @@ package org.assertj.assertions.generator.description;
 /**
  * Stores the information needed to generate an assertion for a field or a getter method, and data related to the field
  * or getter returned type (mostly to import needed classes).
- * <p>
+ * <p/>
  * We need to know :
  * <ul>
  * <li>the type</li>
  * <li>the involved generic types</li>
  * <li>the component type in case of property is an array</li>
  * </ul>
- * <p>
+ * <p/>
  * For example, let's say we have the following method in class <code>Team</code> :
- * 
+ * <p/>
  * <pre>
  * <code>public List&lt;Player&gt; getPlayers()</code>
  * </pre>
- * 
+ * <p/>
  * To generate the following assertion :
- * 
+ * <p/>
  * <pre>
  * <code>TeamAssert</code> <code>hasPlayers(Player... expectedPlayers)</code>
  * </pre>
- * 
+ * <p/>
  * we need to know the generic type of players property : <code>Player</code>.
- * <p>
- * 
+ * <p/>
+ *
  * @author Joel Costigliola
- * 
  */
 public class TypeDescription {
 
@@ -50,58 +49,64 @@ public class TypeDescription {
   private TypeName elementTypeName;
 
   public TypeDescription(TypeName typeName) {
-    super();
-    if (typeName == null) throw new IllegalArgumentException("typeName must not be null.");
-    this.typeName = typeName;
-    this.isArray = false;
-    this.isIterable = false;
-    this.elementTypeName = null;
+	super();
+	if (typeName == null) throw new IllegalArgumentException("typeName must not be null.");
+	this.typeName = typeName;
+	this.isArray = false;
+	this.isIterable = false;
+	this.elementTypeName = null;
   }
 
   public String getSimpleNameWithOuterClass() {
-    return typeName.getSimpleNameWithOuterClass();
+	return typeName.getSimpleNameWithOuterClass();
   }
 
   public boolean isArray() {
-    return isArray;
+	return isArray;
   }
 
   public void setArray(boolean isArray) {
-    this.isArray = isArray;
+	this.isArray = isArray;
   }
 
   public boolean isPrimitive() {
-    return typeName.isPrimitive();
+	return typeName.isPrimitive();
   }
 
   public boolean isRealNumber() {
-    return typeName.isRealNumber();
+	return typeName.isRealNumber();
   }
 
   public boolean isBoolean() {
-    return typeName.isBoolean();
+	return typeName.isBoolean();
+  }
+
+  public boolean isDate() {
+	return typeName.isDate();
   }
 
   public TypeName getElementTypeName() {
-    return elementTypeName;
+	return elementTypeName;
   }
 
   public void setElementTypeName(TypeName elementTypeName) {
-    this.elementTypeName = elementTypeName;
+	this.elementTypeName = elementTypeName;
   }
 
   public boolean isIterable() {
-    return isIterable;
+	return isIterable;
   }
 
   public void setIterable(boolean isIterable) {
-    this.isIterable = isIterable;
+	this.isIterable = isIterable;
   }
 
   @Override
   public String toString() {
-    return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable + ", primitive="
-           + isPrimitive() + ", boolean=" + isBoolean() + ", elementTypeName=" + elementTypeName + "]";
+	return "TypeDescription[typeName=" + typeName + ", array=" + isArray + ", iterable=" + isIterable +
+	       ", primitive="
+	       + isPrimitive() + ", boolean=" + isBoolean() + ", date=" + isDate() + ", " +
+	       "elementTypeName=" + elementTypeName + "]";
   }
 
 }

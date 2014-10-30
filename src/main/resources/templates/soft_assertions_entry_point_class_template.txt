@@ -13,7 +13,7 @@ ${imports}
  * Entry point for assertion of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
-public class SoftAssertions {
+public class SoftAssertions extends AbstractSoftAssertions {
 
   /** Collects error messages of all AssertionErrors thrown by the proxied method. */
   protected final ErrorCollector collector = new ErrorCollector();

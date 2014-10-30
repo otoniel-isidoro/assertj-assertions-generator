@@ -5,7 +5,7 @@ ${imports}
  * Entry point for assertion of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
-public class Assertions {
+public class Assertions extends AbstractAssert {
 ${all_assertions_entry_points}
   /**
    * Creates a new <code>{@link Assertions}</code>.
