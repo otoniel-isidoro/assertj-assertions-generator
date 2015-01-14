@@ -6,10 +6,10 @@
    */
   public ${self_type} is${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
     if(actual!=null){
         // check
-        if (!actual.is${Property}()) {
+        if (!actual.get${Property}()) {
           failWithMessage("\nExpected actual ${class_to_assert} to be ${property} but was not.");
         }
     }
@@ -24,10 +24,10 @@
    */
   public ${self_type} isNot${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
     if(actual!=null){
         // check
-        if (actual.is${Property}()) {
+        if (actual.get${Property}()) {
           failWithMessage("\nExpected actual ${class_to_assert} not to be ${property} but was.");
         }
     }
@@ -44,7 +44,7 @@
    */
   public ${self_type} has${Property}(${propertyType} ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
 
     if(actual!=null){
         // overrides the default error message with a more explicit one

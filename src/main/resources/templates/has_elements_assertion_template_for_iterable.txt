@@ -7,7 +7,7 @@
    */
   public ${self_type} has${Property}(${elementType}... ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
     if(actual!=null){
         if(actual.get${Property}()!=null){
             // check that given ${elementType} varargs is not null.
@@ -44,7 +44,7 @@
      */
     public ${self_type} has${Property}IgnoringGivenFields(List<${elementType}> ${property}, String... ignoringFields) ${throws}{
       // check that actual ${class_to_assert} we want to make assertions on is not null.
-      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      isNotNull();
       if(actual!=null){
           if(actual.get${Property}()!=null){
               // check that given ${elementType} varargs is not null.
@@ -82,7 +82,7 @@
     public ${self_type} has${Property}UsingComparatorOnFields(List<${elementType}> ${property}, String... fields)
     ${throws}{
       // check that actual ${class_to_assert} we want to make assertions on is not null.
-      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      isNotNull();
       if(actual!=null){
            if(actual.get${Property}()!=null){
                 // check that given ${elementType} varargs is not null.
@@ -118,7 +118,7 @@
     public ${self_type} has${Property}UsingFieldByFieldComparator(${elementType}... ${property})
     ${throws}{
       // check that actual ${class_to_assert} we want to make assertions on is not null.
-      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      isNotNull();
       if(actual!=null){
            if(actual.get${Property}()!=null){
               // check that given ${elementType} varargs is not null.
@@ -153,7 +153,7 @@
    */
   public ${self_type} hasNo${Property}() ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
     if(actual!=null){
         // we override the default error message with a more explicit one
         String assertjErrorMessage = "\nExpected :\n  <%s>\nnot to have ${property} but had :\n  <%s>";

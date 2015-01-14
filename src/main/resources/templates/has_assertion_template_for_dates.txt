@@ -7,7 +7,7 @@
    */
   public ${self_type} has${Property}(${propertyType} ${property}) ${throws}{
     // check that actual ${class_to_assert} we want to make assertions on is not null.
-    overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+    isNotNull();
 
     if(actual!=null){
         // overrides the default error message with a more explicit one
@@ -16,7 +16,8 @@
         // null safe check
         ${propertyType} actual${Property} = actual.get${Property}();
         if (!org.assertj.core.util.Objects.areEqual(actual${Property}, ${property})) {
-          failWithMessage(assertjErrorMessage, actual, ${property}, actual${Property});
+          failWithMessage(assertjErrorMessage, actual, new DateTime(${property}).toString(CucumberDateConverter.PATTERN),
+           new DateTime(actual${Property}).toString(CucumberDateConverter.PATTERN));
         }
     }
 
@@ -34,7 +35,7 @@
      */
     public ${self_type} has${Property}CloseTo(${propertyType} ${property}, long deltaInMilliseconds) ${throws}{
       // check that actual ${class_to_assert} we want to make assertions on is not null.
-      overridingErrorMessage("Expected ${class_to_assert} not to be null").isNotNull();
+      isNotNull();
 
       if(actual!=null){
         ${propertyType} actual${Property} = actual.get${Property}();
@@ -51,7 +52,8 @@
           if (${property}==null || actual${Property}==null || (org.assertj.core.util.Dates.timeDifference
           (actual${Property}, ${property}) >
           deltaInMilliseconds)) {
-            failWithMessage(assertjErrorMessage, actual, ${property}, actual${Property});
+            failWithMessage(assertjErrorMessage, actual,  new DateTime(${property}).toString(CucumberDateConverter.PATTERN),
+            new DateTime(actual${Property}).toString(CucumberDateConverter.PATTERN));
           }
         }
       }
