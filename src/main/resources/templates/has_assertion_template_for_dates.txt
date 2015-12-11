@@ -1,4 +1,3 @@
-
   /**
    * Verifies that the actual ${class_to_assert}'s ${property} is equal to the given one.
    * @param ${property} the given ${property} to compare the actual ${class_to_assert}'s ${property} to.
@@ -16,8 +15,8 @@
         // null safe check
         ${propertyType} actual${Property} = actual.get${Property}();
         if (!org.assertj.core.util.Objects.areEqual(actual${Property}, ${property})) {
-          failWithMessage(assertjErrorMessage, actual, new DateTime(${property}).toString(CucumberDateConverter.PATTERN),
-           new DateTime(actual${Property}).toString(CucumberDateConverter.PATTERN));
+          failWithMessage(assertjErrorMessage, actual, ${property}!=null ? new org.joda.time.DateTime(${property}).toString(DATE_PATTERN) : null,
+           actual${Property}!=null ? new org.joda.time.DateTime(actual${Property}).toString(DATE_PATTERN) : null);
         }
     }
 
@@ -52,8 +51,8 @@
           if (${property}==null || actual${Property}==null || (org.assertj.core.util.Dates.timeDifference
           (actual${Property}, ${property}) >
           deltaInMilliseconds)) {
-            failWithMessage(assertjErrorMessage, actual,  new DateTime(${property}).toString(CucumberDateConverter.PATTERN),
-            new DateTime(actual${Property}).toString(CucumberDateConverter.PATTERN));
+            failWithMessage(assertjErrorMessage, actual, ${property}!=null ? new org.joda.time.DateTime(${property}).toString(DATE_PATTERN) : null,
+            actual${Property}!=null ? new org.joda.time.DateTime(actual${Property}).toString(DATE_PATTERN) : null);
           }
         }
       }

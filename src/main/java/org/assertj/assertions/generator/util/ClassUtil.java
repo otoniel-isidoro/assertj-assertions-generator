@@ -1,3 +1,15 @@
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright 2012-2014 the original author or authors.
+ */
 package org.assertj.assertions.generator.util;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -12,7 +24,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -22,10 +33,13 @@ import java.lang.reflect.WildcardType;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +58,12 @@ public class ClassUtil {
   public static final String IS_PREFIX = "is";
   public static final String GET_PREFIX = "get";
   private static final String CLASS_SUFFIX = ".class";
+  private static final Comparator<Method> GETTER_COMPARATOR = new Comparator<Method>() {
+	@Override
+    public int compare(Method m1, Method m2) {
+	  return m1.getName().compareTo(m2.getName());
+    }
+  };
 
   /**
    * Call {@link #collectClasses(ClassLoader, String...)} with <code>Thread.currentThread().getContextClassLoader()
@@ -229,8 +249,8 @@ public class ClassUtil {
     return uncapitalize(propertyWithCapitalLetter);
   }
 
-  public static boolean isIterable(Class<?> returnType) {
-    return Iterable.class.isAssignableFrom(returnType);
+  public static boolean inheritsCollectionOrIsIterable(Class<?> returnType) {
+    return Collection.class.isAssignableFrom(returnType) || Iterable.class.equals(returnType);
   }
 
   public static boolean isArray(Class<?> returnType) {
@@ -265,23 +285,29 @@ public class ClassUtil {
            && name.startsWith(IS_PREFIX);
   }
 
-  public static List<Method> declaredGetterMethodsOf(Class<?> clazz) {
+  public static Set<Method> declaredGetterMethodsOf(Class<?> clazz) {
     return filterGetterMethods(clazz.getDeclaredMethods());
   }
 
-  public static List<Method> getterMethodsOf(Class<?> clazz) {
+  public static Set<Method> getterMethodsOf(Class<?> clazz) {
     return filterGetterMethods(clazz.getMethods());
   }
 
-  private static List<Method> filterGetterMethods(Method[] methods) {
-    List<Method> getters = new ArrayList<Method>(methods.length);
+  private static Set<Method> filterGetterMethods(Method[] methods) {
+    Set<Method> getters = new TreeSet<Method>(GETTER_COMPARATOR);
     for (int i = 0; i < methods.length; i++) {
       Method method = methods[i];
-      if (isPublic(method.getModifiers()) && isNotDefinedInObjectClass(method) && (isStandardGetter(method) || isBooleanGetter(method))) {
+      if (isPublic(method.getModifiers()) 
+    	  && isNotDefinedInObjectClass(method) 
+    	  && isGetter(method)) {
         getters.add(method);
       }
     }
     return getters;
+  }
+
+  private static boolean isGetter(Method method) {
+	return isStandardGetter(method) || isBooleanGetter(method);
   }
 
   public static List<Field> nonStaticPublicFieldsOf(Class<?> clazz) {
@@ -295,15 +321,6 @@ public class ClassUtil {
     return nonStaticPublicFields;
   }
 
-
-  public static List<Member> getterMethodsAndNonStaticPublicFieldsOf(Class<?> clazz) {
-    List<Member> methodsAndNonStaticPublicFields = new ArrayList<Member>();
-    methodsAndNonStaticPublicFields.addAll(getterMethodsOf(clazz));
-    methodsAndNonStaticPublicFields.addAll(nonStaticPublicFieldsOf(clazz));
-    return methodsAndNonStaticPublicFields;
-  }
-  
-  
   public static List<Field> declaredPublicFieldsOf(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     List<Field> nonStaticPublicFields = new ArrayList<Field>();

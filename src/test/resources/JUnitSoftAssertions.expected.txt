@@ -1,38 +1,41 @@
 package org.assertj.assertions.generator.data;
 
-import static org.assertj.core.groups.Properties.extractProperty;
-
-import java.util.List;
 import org.assertj.core.internal.cglib.proxy.Enhancer;
 
 import org.assertj.core.api.ErrorCollector;
-import org.assertj.core.api.SoftAssertionError;
+
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.MultipleFailureException;
+import org.junit.runners.model.Statement;
 
 /**
  * Entry point for assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
-public class SoftAssertions {
+public class JUnitSoftAssertions implements TestRule {
 
   /** Collects error messages of all AssertionErrors thrown by the proxied method. */
   protected final ErrorCollector collector = new ErrorCollector();
 
-  /** Creates a new </code>{@link SoftAssertions}</code>. */
-  public SoftAssertions() {
+  /** Creates a new </code>{@link JUnitSoftAssertions}</code>. */
+  public JUnitSoftAssertions() {
+    super();
   }
 
   /**
-   * Verifies that no proxied assertion methods have failed.
-   *
-   * @throws SoftAssertionError if any proxied assertion objects threw
+   * TestRule implementation that verifies that no proxied assertion methods have failed.
    */
-  public void assertAll() {
-    List<Throwable> errors = collector.errors();
-    if (!errors.isEmpty()) {
-      throw new SoftAssertionError(extractProperty("message", String.class).from(errors));
-    }
+  public Statement apply(final Statement base, Description description) {
+    return new Statement() {
+      @Override
+      public void evaluate() throws Throwable {
+        base.evaluate();
+        MultipleFailureException.assertEmpty(collector.errors());
+      }
+    };
   }
-
+  
   @SuppressWarnings("unchecked")
   protected <T, V> V proxy(Class<V> assertClass, Class<T> actualClass, T actual) {
     Enhancer enhancer = new Enhancer();

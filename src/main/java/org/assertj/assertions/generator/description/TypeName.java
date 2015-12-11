@@ -1,12 +1,27 @@
+/**
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
+ *
+ * Copyright 2012-2014 the original author or authors.
+ */
 package org.assertj.assertions.generator.description;
 
 import org.assertj.assertions.generator.util.ClassUtil;
 
+import static com.google.common.base.Objects.equal;
 import static org.apache.commons.lang3.ArrayUtils.contains;
+import static org.apache.commons.lang3.StringUtils.indexOfAny;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.remove;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
-import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
+import static org.apache.commons.lang3.StringUtils.substringBefore;
 
 /**
  * Describes a type with package and class/interface simple name.
@@ -18,6 +33,7 @@ import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 public class TypeName implements Comparable<TypeName> {
 
   public static final String JAVA_UTIL_PACKAGE = "java.util";
+  private static final String CAPITAL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   public static final String JAVA_LANG_PACKAGE = "java.lang";
   protected static final String[] REAL_NUMBERS_TYPES = { "float", "double" };
   protected static final String[] REAL_NUMBERS_WRAPPER_TYPES = { "Float", "Double" };
@@ -40,18 +56,24 @@ public class TypeName implements Comparable<TypeName> {
 	setPackageName(packageName);
   }
 
+  /**
+   * WARNING : does not work for nested class like com.books.Author.Name, 
+   * @param typeName
+   */
   public TypeName(String typeName) {
-	if (isBlank(typeName)) throw new IllegalArgumentException("type name should not be blank or null");
-	if (typeName.contains(".")) {
-	  this.typeSimpleName = substringAfterLast(typeName, ".");
-	  setPackageName(substringBeforeLast(typeName, "."));
-	} else {
-	  // primitive type => no package
-	  this.typeSimpleName = typeName;
-	  setPackageName(NO_PACKAGE);
-	}
-	this.typeSimpleNameWithOuterClass = typeSimpleName;
-	this.typeSimpleNameWithOuterClassNotSeparatedByDots = typeSimpleName;
+    if (isBlank(typeName)) throw new IllegalArgumentException("type name should not be blank or null");
+    int indexOfClassName = indexOfAny(typeName, CAPITAL_LETTERS);
+    if (indexOfClassName > 0) {
+      this.typeSimpleNameWithOuterClass = typeName.substring(indexOfClassName);
+      setPackageName(remove(typeName, "." + typeSimpleNameWithOuterClass));
+    } else {
+      // primitive type => no package
+      this.typeSimpleNameWithOuterClass = typeName;
+      setPackageName(NO_PACKAGE);
+    }
+    this.typeSimpleName = typeSimpleNameWithOuterClass.contains(".") ? 
+        substringAfterLast(typeSimpleNameWithOuterClass, ".") : typeSimpleNameWithOuterClass;
+    this.typeSimpleNameWithOuterClassNotSeparatedByDots = remove(typeSimpleNameWithOuterClass, ".");
   }
 
   public TypeName(Class<?> clazz) {
@@ -138,15 +160,33 @@ public class TypeName implements Comparable<TypeName> {
 
   @Override
   public String toString() {
-	return isEmpty(packageName) ? typeSimpleName : packageName + "." + typeSimpleName;
+    return getFullyQualifiedClassName();
   }
 
   @Override
   public int compareTo(TypeName o) {
-	return toString().compareTo(o.toString());
+    return getFullyQualifiedClassName().compareTo(o.getFullyQualifiedClassName());
   }
 
   public boolean isArray() {
 	return typeSimpleName.contains("[]");
   }
+
+  public boolean isNested() {
+    return typeSimpleNameWithOuterClass.contains(".");
+  }
+  
+  public TypeName getOuterClassTypeName() {
+    if (!isNested()) return null;
+    return new TypeName(substringBefore(typeSimpleNameWithOuterClass, ".") , packageName);
+  }
+
+  public String getFullyQualifiedClassName() {
+    return isEmpty(packageName) ? typeSimpleNameWithOuterClass : packageName + "." + typeSimpleNameWithOuterClass;
+  }
+  
+  public String getFullyQualifiedTypeNameIfNeeded(String targetPackage) {
+	return belongsToJavaLangPackage() || equal(targetPackage, packageName) ? getSimpleNameWithOuterClass() : getFullyQualifiedClassName();
+  }
+  
 }

@@ -10,14 +10,15 @@
  *
  * Copyright 2012-2014 the original author or authors.
  */
-package org.assertj.assertions.generator.data.lotr;
+package org.assertj.assertions.generator;
 
-/**
- * Rings of Power in Tolkien's Lord of the Rings.
- * 
- * @author Joel Costigliola
- */
-public enum Ring {
-  oneRing, vilya, nenya, narya, dwarfRing, manRing;
-  
+// used in test - getters implemntation don't matter
+public class ClassUsingDifferentClassesWithSameName {
+  public org.assertj.assertions.generator.data.nba.Team getNbaTeam() {
+	return null;
+  }
+
+  public org.assertj.assertions.generator.data.Team getTeam() {
+	return null;
+  }
 }

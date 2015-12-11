@@ -1,10 +1,9 @@
 package ${package};
 
-${imports}
 import org.assertj.core.api.BDDAssertions;
 
 /**
- * Entry point for BDD assertion of different data types. Each method in this class is a static factory for the
+ * Entry point for BDD assertions of different data types. Each method in this class is a static factory for the
  * type-specific assertion objects.
  */
 public class BddAssertions extends BDDAssertions  {
